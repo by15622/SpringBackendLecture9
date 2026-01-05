@@ -1,5 +1,6 @@
 package org.example.Head02_JavaProgramming;
 
+import java.security.spec.RSAOtherPrimeInfo;
 import java.util.Arrays;
 
 public class ArrayToString {
@@ -7,5 +8,7 @@ public class ArrayToString {
         int[] arr = {5, 10, 15};
 
         System.out.println(Arrays.toString(arr)); // [5, 10, 15]
+
     }
+
 }
