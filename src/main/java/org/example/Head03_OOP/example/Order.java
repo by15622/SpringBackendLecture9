@@ -2,27 +2,40 @@ package org.example.Head03_OOP.example;
 
 public class Order {
     private String orderId;
-    private List<Product> products;
     private boolean isPaid;
 
-    // 기본 생성자
     public Order() {
         this.orderId = "NONE";
-        this.products = new ArrayList<>();
         this.isPaid = false;
     }
 
-    // 오버로딩된 생성자
-    public Order(String orderId, List<Product> products) {
+    public Order(String orderId , boolean isPaid){
         this.orderId = orderId;
-        this.products = products;
-        this.isPaid = false;
+        this.isPaid = isPaid;
     }
 
-    // this() 호출 예시
-    public Order(String orderId) {
-        this(orderId, new ArrayList<>());
+    public String getOrderId(){
+        return this.orderId;
     }
 
-    //getter 생성 법 실습
+    public boolean getIsPaid(){
+        return this.isPaid;
+    }
+
+    public void setOrderId(String orderId){
+        this.orderId = orderId;
+    }
+
+    public void setIsPaid(boolean isPaid){
+        this.isPaid = isPaid;
+    }
+
+    public boolean isPaid() {
+        return isPaid;
+    }
+
+    public void setPaid(boolean paid) {
+        isPaid = paid;
+    }
+//getter or setter 생성 법 실습
 }

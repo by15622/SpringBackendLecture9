@@ -1,7 +1,5 @@
 package org.example.Head03_OOP.example;
 
-import org.example.Order;
-
 public class TestProgram {
     public static void main(String[] args) {
         Order order = new Order();
