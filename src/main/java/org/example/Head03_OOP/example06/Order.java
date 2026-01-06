@@ -9,5 +9,7 @@ public class Order {
 
     public void process(double amount) {
         payment.pay(amount);
+
     }
+
 }

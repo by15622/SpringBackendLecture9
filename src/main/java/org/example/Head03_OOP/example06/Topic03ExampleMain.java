@@ -7,5 +7,8 @@ public class Topic03ExampleMain {
 
         Order o2 = new Order(new AccountTransferPayment());
         o2.process(30000);
+
+        Order o3 = new Order(new CryptoPayment());
+        o3.process(70000);
     }
 }
