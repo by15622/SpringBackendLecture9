@@ -1,0 +1,12 @@
+package org.example.Head05_BigO.example2;
+
+public class ShapeExtendExample {
+    public static void main(String[] args) {
+        // 사용 예시
+        ShapeContainer<Circle> container = new ShapeContainer<>();
+        container.add(new Circle(2.0));
+        container.add(new Circle(3.0));
+        System.out.println(container.totalArea());
+
+    }
+}
