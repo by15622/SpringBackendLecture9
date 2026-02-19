@@ -1,0 +1,20 @@
+package com.example.demo.controller.response;
+
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+@Controller
+public class ResponseModelController {
+    @GetMapping("/v1/members")
+    public String postMember(@RequestParam("email") String email,
+                             @RequestParam("name") String name,
+                             @RequestParam("phone") String phone,
+                             Model model) {
+        model.addAttribute("email", email);
+        model.addAttribute("name", name);
+        model.addAttribute("phone", phone);
+        return "memberResult"; // templates/memberResult.html
+    }
+}
