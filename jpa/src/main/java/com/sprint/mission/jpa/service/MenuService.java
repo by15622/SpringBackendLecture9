@@ -1,6 +1,9 @@
 package com.sprint.mission.jpa.service;
 
+import com.sprint.mission.jpa.domain.Category;
+import com.sprint.mission.jpa.domain.Menu;
 import com.sprint.mission.jpa.dto.MenuResponse;
+import com.sprint.mission.jpa.repository.CategoryRepository;
 import com.sprint.mission.jpa.repository.MenuRepository;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -15,9 +18,11 @@ import org.springframework.stereotype.Service;
 public class MenuService {
 
   private final MenuRepository repository;
+  private final CategoryRepository categoryRepository;
 
-  public MenuService(MenuRepository repository) {
+  public MenuService(MenuRepository repository, CategoryRepository categoryRepository) {
     this.repository = repository;
+    this.categoryRepository = categoryRepository;
   }
 
   @Transactional(readOnly = true)
@@ -99,6 +104,36 @@ public class MenuService {
     return repository.findByNameContainingWithCategory(keyword).stream()
         .map(m -> new MenuResponse(m.getId(), m.getName(), m.getPrice(), m.getCategory().getName()))
         .toList();
+  }
+
+  @Transactional
+  public void txIncrease(String categoryName, int delta) {
+    List<Menu> menus = repository.findByCategoryName(categoryName);
+    menus.forEach(m -> m.increasePrice(delta));
+    // save 호출 없어도 dirty checking으로 UPDATE 됨
+  }
+
+  //신규 추가
+  // 실습 B: 중간에 예외 → 전체 롤백(신규 메뉴 insert + 가격 update 전부)
+  @Transactional
+  public void txCreateAndIncreaseWithRollback(
+      String categoryName,
+      String newMenuName,
+      int newMenuPrice,
+      int delta
+  ) {
+    Category category = categoryRepository.findByName(categoryName)
+        .orElseThrow(() -> new IllegalArgumentException("카테고리 없음"));
+
+    // 1) 신규 메뉴 insert
+    repository.save(new Menu(newMenuName, newMenuPrice, category));
+
+    // 2) 가격 일괄 인상(update)
+    List<Menu> menus = repository.findByCategoryName(categoryName);
+    menus.forEach(m -> m.increasePrice(delta));
+
+    // 3) 강제 예외 → 롤백 확인
+    throw new RuntimeException("강제 예외(롤백 확인)");
   }
 
 }

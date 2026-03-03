@@ -51,4 +51,6 @@ public interface MenuRepository extends JpaRepository<Menu, Long> {
       Pageable pageable
   );
 
+  List<Menu> findByCategoryName(String categoryName);
+
 }

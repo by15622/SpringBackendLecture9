@@ -47,4 +47,9 @@ public class Menu {
   public void changeCategory(Category category) {
     this.category = category;
   }
+
+  public void increasePrice(int delta) {
+    this.price += delta;
+  }
+
 }
