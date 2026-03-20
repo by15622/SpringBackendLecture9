@@ -5,29 +5,33 @@ import com.sprint.mission.jpa.domain.Menu;
 import com.sprint.mission.jpa.dto.MenuResponse;
 import com.sprint.mission.jpa.repository.CategoryRepository;
 import com.sprint.mission.jpa.repository.MenuRepository;
+import jakarta.persistence.EntityManager;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.data.domain.Sort;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.support.TransactionSynchronizationManager;
+import org.springframework.transaction.support.TransactionSynchronization;
 
+@Slf4j
 @Service
+@RequiredArgsConstructor
 public class MenuService {
 
   private final MenuRepository repository;
   private final CategoryRepository categoryRepository;
-
-  public MenuService(MenuRepository repository, CategoryRepository categoryRepository) {
-    this.repository = repository;
-    this.categoryRepository = categoryRepository;
-  }
+  private final AuditService auditService;
+  private final EntityManager em;
 
   @Transactional(readOnly = true)
   public List<MenuResponse> findExpensiveMenusInCategory2(String categoryName, int minPrice) {
-    // 아까 MenuRepository에 추가한 그 긴 이름의 메서드를 호출하는 거예요!
     return repository.findByCategoryNameAndPriceGreaterThanEqualOrderByPriceDesc(categoryName,
             minPrice)
         .stream()
@@ -40,8 +44,17 @@ public class MenuService {
         .toList();
   }
 
+  @Transactional(readOnly = true)
   public MenuResponse findById(Long id) {
-    return null;
+    Menu menu = repository.findById(id)
+        .orElseThrow(() -> new IllegalArgumentException("메뉴 없음"));
+
+    return new MenuResponse(
+        menu.getId(),
+        menu.getName(),
+        menu.getPrice(),
+        menu.getCategory().getName()
+    );
   }
 
   @Transactional(readOnly = true)
@@ -134,6 +147,40 @@ public class MenuService {
 
     // 3) 강제 예외 → 롤백 확인
     throw new RuntimeException("강제 예외(롤백 확인)");
+  }
+
+  @Transactional
+  public void changePriceWithAuditAndFail(Long menuId, int newPrice) {
+    log.info("[Outer] tx active={}", TransactionSynchronizationManager.isActualTransactionActive());
+
+    TransactionSynchronizationManager.registerSynchronization(new TransactionSynchronization() {
+      @Override public void afterCompletion(int status) {
+        log.info("[Outer] END = {}", status == STATUS_COMMITTED ? "COMMIT" : "ROLLBACK");
+      }
+    });
+
+    // 1) 바깥 트랜잭션에서 가격 변경
+    repository.updatePrice(menuId, newPrice);
+
+    // 2) 감사 기록(항상 새 트랜잭션)
+    auditService.writeAuditMenu(1L);
+
+    // 3) 일부러 실패시켜 바깥 트랜잭션 롤백 유도
+    throw new RuntimeException("OUTER FAIL");
+  }
+
+  @Transactional(isolation = Isolation.READ_COMMITTED)
+  public int readTwicePrice(Long menuId) throws Exception {
+    int first = repository.findById(menuId).orElseThrow().getPrice();
+    Thread.sleep(5000); // 5초 동안 다른 요청으로 가격 변경(커밋)하도록 시간 벌기
+    em.clear(); // 1차 캐시 제거 -> 다음 조회는 DB로 감
+    int second = repository.findById(menuId).orElseThrow().getPrice();
+    return second - first; // 0이면 동일, 값이 다르면 non-repeatable read 상황 체감
+  }
+
+  @Transactional
+  public void updatePrice(Long menuId, int price) {
+    repository.updatePrice(menuId, price);
   }
 
 }
