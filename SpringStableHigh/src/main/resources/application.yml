@@ -1,0 +1,12 @@
+spring:
+  datasource:
+    url: jdbc:postgresql://localhost:5432/menudb
+    username: menu_user
+    password: menu_pass
+    driver-class-name: org.postgresql.Driver
+
+logging:
+  level:
+    root: INFO
+    com.sprint.mission.springstablehigh: TRACE
+
