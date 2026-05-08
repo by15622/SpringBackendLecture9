@@ -1,3 +1,27 @@
+server:
+  port: 8080
+
+management:
+  endpoint:
+    health:
+      show-details: always
+      probes:
+        enabled: false
+
+  endpoints:
+    web:
+      exposure:
+        include: health, info, metrics
+
+  info:
+    env:
+      enabled: true
+
+info:
+  app:
+    name: actuator-demo
+    version: 1.0.0
+
 spring:
   datasource:
     url: jdbc:postgresql://localhost:5432/menudb
@@ -8,5 +32,5 @@ spring:
 logging:
   level:
     root: INFO
-    com.sprint.mission.springstablehigh: TRACE
+    com.example.head16_springstablehigh: DEBUG
 

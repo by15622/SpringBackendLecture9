@@ -12,7 +12,6 @@
           </set>
         </option>
       </GradleProjectSettings>
-
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/SpringHello" />
         <option name="modules">
@@ -21,7 +20,14 @@
           </set>
         </option>
       </GradleProjectSettings>
-
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/SpringSecurity" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/SpringSecurity" />
+          </set>
+        </option>
+      </GradleProjectSettings>
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/SpringStableHigh" />
         <option name="modules">
@@ -30,7 +36,6 @@
           </set>
         </option>
       </GradleProjectSettings>
-
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/SpringTDD" />
         <option name="modules">
@@ -39,7 +44,6 @@
           </set>
         </option>
       </GradleProjectSettings>
-
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/demo" />
         <option name="modules">
@@ -48,7 +52,6 @@
           </set>
         </option>
       </GradleProjectSettings>
-
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/demo2" />
         <option name="modules">
@@ -57,7 +60,6 @@
           </set>
         </option>
       </GradleProjectSettings>
-
       <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/jpa" />
         <option name="modules">
@@ -66,7 +68,6 @@
           </set>
         </option>
       </GradleProjectSettings>
-
     </option>
   </component>
 </project>
