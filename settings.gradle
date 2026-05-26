@@ -1,1 +1,4 @@
 rootProject.name = 'SpringBackendLecture9'
+include 'java-thread-basic-demo'
+include 'java-executor-future-demo'
+include 'javacompletablefuturedemo'
