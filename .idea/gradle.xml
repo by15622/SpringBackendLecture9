@@ -16,6 +16,30 @@
         </option>
       </GradleProjectSettings>
       <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/SpringAsyncDemo" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/SpringAsyncDemo" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/SpringAsyncExceptionDemo" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/SpringAsyncExceptionDemo" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
+        <option name="externalProjectPath" value="$PROJECT_DIR$/SpringEventDemo" />
+        <option name="modules">
+          <set>
+            <option value="$PROJECT_DIR$/SpringEventDemo" />
+          </set>
+        </option>
+      </GradleProjectSettings>
+      <GradleProjectSettings>
         <option name="externalProjectPath" value="$PROJECT_DIR$/SpringHello" />
         <option name="modules">
           <set>
