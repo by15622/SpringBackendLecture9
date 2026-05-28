@@ -1,8 +1,8 @@
 package org.example.springasyncexceptiondemo.config;
 
-import lombok.RequiredArgsConstructor;
 import org.example.springasyncexceptiondemo.handler.CustomAsyncExceptionHandler;
 import org.springframework.aop.interceptor.AsyncUncaughtExceptionHandler;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.AsyncConfigurer;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -10,18 +10,26 @@ import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import java.util.concurrent.Executor;
 
 @Configuration
-@RequiredArgsConstructor
-public class AsyncConfig implements AsyncConfigurer {
-
-  private final CustomAsyncExceptionHandler customAsyncExceptionHandler;
+public class AsyncConfig
+    implements AsyncConfigurer {
 
   @Override
   public Executor getAsyncExecutor() {
-    ThreadPoolTaskExecutor executor = new ThreadPoolTaskExecutor();
+
+    ThreadPoolTaskExecutor executor =
+        new ThreadPoolTaskExecutor();
+
     executor.setCorePoolSize(2);
     executor.setMaxPoolSize(4);
     executor.setQueueCapacity(10);
-    executor.setThreadNamePrefix("Async-");
+
+    executor.setThreadNamePrefix(
+        "Async-"
+    );
+
+    executor.setTaskDecorator(
+        new MdcTaskDecorator()
+    );
 
     executor.initialize();
 
@@ -29,7 +37,33 @@ public class AsyncConfig implements AsyncConfigurer {
   }
 
   @Override
-  public AsyncUncaughtExceptionHandler getAsyncUncaughtExceptionHandler() {
-    return customAsyncExceptionHandler;
+  public AsyncUncaughtExceptionHandler
+  getAsyncUncaughtExceptionHandler() {
+
+    return new CustomAsyncExceptionHandler();
+  }
+
+  @Bean(name = "mdcTaskExecutor")
+  public ThreadPoolTaskExecutor
+  mdcTaskExecutor() {
+
+    ThreadPoolTaskExecutor executor =
+        new ThreadPoolTaskExecutor();
+
+    executor.setCorePoolSize(2);
+    executor.setMaxPoolSize(4);
+    executor.setQueueCapacity(10);
+
+    executor.setThreadNamePrefix(
+        "MDC-Async-"
+    );
+
+    executor.setTaskDecorator(
+        new MdcTaskDecorator()
+    );
+
+    executor.initialize();
+
+    return executor;
   }
 }
