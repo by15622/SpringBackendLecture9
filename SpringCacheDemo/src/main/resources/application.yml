@@ -1,0 +1,16 @@
+spring:
+  application:
+    name: SpringCacheDemo
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,metrics,caches,info
+
+  endpoint:
+    health:
+      show-details: always
+
+    caches:
+      access: unrestricted
